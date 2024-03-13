@@ -5,7 +5,7 @@ repositories:
     version: main
   ros_components_description:
     type: git
-    url: https://github.com/husarion/ros_components_description.git
+    url: https://github.com/BOOTCFG/ros_components_description
     version: ros2
   micro_ros_msgs:
     type: git
