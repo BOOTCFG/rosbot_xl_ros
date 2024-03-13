@@ -82,7 +82,29 @@
   <!-- INCLUDE CAMERA -->
 
   <xacro:property name="camera_model" value="$(arg camera_model)" />
-  <xacro:property name="camera_parent_link" value="camera_mount_link" />
+  <!-- <xacro:property name="camera_parent_link" value="camera_mount_link" /> -->
+  <link name="gimbal_base"/>
+  <link name="gimbal_mount"/>
+  <link name="gimbal_optical_frame"/>
+
+   <joint name="gimbal_optical_frame_joint" type="fixed">
+            <origin xyz="0 0 0" rpy="-${3.1415926535897931/2} 0.0 -${3.1415926535897931/2}"/>
+            <parent link="gimbal_base"/>
+            <child link="gimbal_optical_frame"/>
+        </joint>
+    
+  <joint name="gimbal_base_joint" type="fixed">
+    <parent link="base_link" />
+    <child link="gimbal_base" />
+
+        <origin xyz="0.05 0.0 0.55" rpy="0.0 0.0 0.0" />
+  </joint>
+
+  <joint name="gimbal_mount_joint" type="floating">
+    <parent link="gimbal_base" />
+    <child link="gimbal_mount" />
+  </joint>
+  <xacro:property name="camera_parent_link" value="gimbal_mount" />
   <xacro:property name="camera_xyz" value="0.0 0.0 0.0" />
   <xacro:property name="camera_rpy" value="0.0 0.0 0.0" />
 
@@ -135,6 +157,16 @@
       use_nominal_extrinsics="$(arg use_sim)"
       simulation_engine="$(arg simulation_engine)" />
   </xacro:if>
+
+  <xacro:include
+      filename="$(find ros_components_description)/urdf/depthai_descr.urdf.xacro"
+      ns="camera" />
+    <xacro:camera.depthai_camera
+      camera_name="oak" camera_model="OAK-D-PRO" parent_frame="${camera_parent_link}" base_frame="oak-d_frame"
+                                           cam_pos_x="0.0" cam_pos_y="0.0" cam_pos_z="0.0" 
+                                           cam_roll="0.0" cam_pitch="0.0" cam_yaw="0.0" />
+
+                                           <!-- cam_pos_x="0.015" cam_pos_y="0.038" cam_pos_z="0.018"  -->
 
   <!-- INCLUDE CAMERA MOUNT - add if camera_model is not empty -->
 
